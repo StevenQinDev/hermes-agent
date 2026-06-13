@@ -1672,12 +1672,64 @@ def _node_version_tuple(node_bin: str) -> tuple[int, int, int] | None:
         return None
 
 
+def _fnm_node26_candidates() -> list[str]:
+    """Node binaries from fnm's installed versions, newest first.
+
+    fnm keeps each version at ``<FNM_DIR>/node-versions/v<X.Y.Z>/installation/
+    bin/node`` (default ``FNM_DIR``: ``$XDG_DATA_HOME/fnm`` or ``~/.local/share/
+    fnm``; macOS Homebrew also uses ``~/Library/Application Support/fnm``). When
+    the *active* node is older than 26.3 — e.g. the user's fnm default is on
+    v25 — the right 26.x is still installed and usable; surface it so OpenTUI
+    works without the user re-aliasing their global default. Version-sorted so
+    the newest qualifying node wins.
+    """
+    roots: list[Path] = []
+    fnm_dir = os.environ.get("FNM_DIR")
+    if fnm_dir:
+        roots.append(Path(fnm_dir))
+    xdg = os.environ.get("XDG_DATA_HOME")
+    if xdg:
+        roots.append(Path(xdg) / "fnm")
+    roots.append(Path.home() / ".local" / "share" / "fnm")
+    roots.append(Path.home() / "Library" / "Application Support" / "fnm")
+
+    seen: set[Path] = set()
+    found: list[tuple[tuple[int, int, int], str]] = []
+    for root in roots:
+        versions_dir = root / "node-versions"
+        if versions_dir in seen or not versions_dir.is_dir():
+            continue
+        seen.add(versions_dir)
+        try:
+            entries = list(versions_dir.iterdir())
+        except OSError:
+            continue
+        for entry in entries:
+            node_bin = entry / "installation" / "bin" / "node"
+            if not (node_bin.is_file() and os.access(node_bin, os.X_OK)):
+                continue
+            # Trust the directory name for sorting; the real probe happens in
+            # the caller (a renamed/symlinked dir still gets version-checked).
+            name = entry.name.lstrip("v").split("-", 1)[0]
+            parts = name.split(".")
+            try:
+                ver = (int(parts[0]), int(parts[1]), int(parts[2]))
+            except (IndexError, ValueError):
+                ver = (0, 0, 0)
+            found.append((ver, str(node_bin)))
+    found.sort(key=lambda pair: pair[0], reverse=True)
+    return [path for _, path in found]
+
+
 def _node26_bin_or_none() -> str | None:
     """Resolve a Node >= 26.3.0 binary (no exit — a probe), or ``None``.
 
-    ``HERMES_NODE`` override > ``node`` on PATH, each gated on version >= 26.3.0.
-    OpenTUI's native renderer loads via the experimental ``node:ffi`` API that only
-    exists on Node 26.3+, so an older Node is treated as "not available".
+    Order: ``HERMES_NODE`` override > ``node`` on PATH > newest fnm-installed
+    version. Each is gated on the real ``--version`` being >= 26.3.0. OpenTUI's
+    native renderer loads via the experimental ``node:ffi`` API that only exists
+    on Node 26.3+, so an older Node is treated as "not available" — but an
+    installed-yet-inactive 26.x (common when fnm's default is on an older line)
+    is discovered and used so the engine still launches.
     """
     candidates: list[str] = []
     env_node = os.environ.get("HERMES_NODE")
@@ -1686,6 +1738,7 @@ def _node26_bin_or_none() -> str | None:
     path = shutil.which("node")
     if path:
         candidates.append(path)
+    candidates.extend(_fnm_node26_candidates())
     for cand in candidates:
         ver = _node_version_tuple(cand)
         if ver is not None and ver >= NODE26_MIN_VERSION:
@@ -2122,6 +2175,14 @@ def _launch_tui(
     )
     env.setdefault("HERMES_PYTHON", sys.executable)
     env.setdefault("HERMES_CWD", os.getcwd())
+    # The TUI subprocess is launched with cwd=<engine package dir> (so its
+    # build/resolution works), which means the gateway it spawns would otherwise
+    # auto-detect THAT dir as the workspace (chrome bar showed "ui-opentui" no
+    # matter where you ran hermes). TERMINAL_CWD is the gateway's canonical
+    # launch-dir channel (_completion_cwd) — set it to the real cwd here so the
+    # session, chrome bar, and terminal tool all anchor to where you actually
+    # are. Worktree mode overrides it to the worktree path below.
+    env.setdefault("TERMINAL_CWD", os.getcwd())
     env.setdefault("NODE_ENV", "development" if tui_dev else "production")
 
     wt_info = None

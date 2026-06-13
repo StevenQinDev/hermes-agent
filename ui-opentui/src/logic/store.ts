@@ -181,6 +181,9 @@ export interface SessionInfo {
   fast?: boolean
   cwd?: string
   branch?: string
+  /** Session title (auto-titled after the first exchange / renamed via the
+   *  picker) — drives the terminal window-title chrome; unset until titled. */
+  title?: string
   running?: boolean
   contextUsed?: number
   contextMax?: number
@@ -324,6 +327,7 @@ function infoPatchFrom(d: SessionInfoPatchDecoded): Partial<SessionInfo> {
   if (d.fast !== undefined) patch.fast = d.fast
   if (d.cwd) patch.cwd = d.cwd
   if (d.branch) patch.branch = d.branch
+  if (d.title) patch.title = d.title
   if (d.running !== undefined) patch.running = d.running
   // prefer the nested usage.context_* numbers, else the top-level fallback.
   const used = d.usage?.context_used ?? d.context_used

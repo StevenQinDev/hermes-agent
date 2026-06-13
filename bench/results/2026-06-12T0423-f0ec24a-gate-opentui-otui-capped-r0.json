@@ -1,0 +1,225 @@
+{
+ "meta": {
+  "cell": "gate",
+  "ui": "opentui",
+  "config": "otui-capped",
+  "mode": "digest",
+  "rep": 0,
+  "run_id": "mqaf8cjn-3smp",
+  "utc": "2026-06-12T04:23:16.355Z",
+  "sha": "f0ec24ad5",
+  "node": "/home/daimon/.local/share/fnm/node-versions/v26.3.0/installation/bin/node",
+  "node_version": "v26.3.0",
+  "pty": {
+   "cols": 120,
+   "rows": 40,
+   "term": "xterm-256color"
+  },
+  "heap_mb": 8192,
+  "memory_max": null,
+  "container_cap": false,
+  "container_memory": null,
+  "opentui_cap": 3000,
+  "fixture": {
+   "path": "/home/daimon/github/worktrees/hermes-agent/quiet-quill/hermes-agent/bench/.cache/fixture-300.ndjson",
+   "msgs": 300,
+   "sha256": "ac81e975c299da7d50cfda7fc0fee33c356bd31a4e17a7f0f8e49905e205051a"
+  },
+  "sample_every": 100,
+  "mode_params": {},
+  "ui_pid": 168251,
+  "gw_pid": 168266,
+  "cgroup": null,
+  "load_avg_at_start": [
+   0.31,
+   0.92,
+   1.42
+  ],
+  "instrumented": false
+ },
+ "samples": [
+  {
+   "kind": "periodic",
+   "t_ms": 25,
+   "msgs": null,
+   "events": null,
+   "pty_bytes": 0,
+   "pty_writes": 0,
+   "rss_kb": 54688,
+   "pss_kb": 25883,
+   "private_dirty_kb": 17496,
+   "vmhwm_kb": 54768,
+   "utime_ticks": 1,
+   "stime_ticks": 0
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 1030,
+   "msgs": null,
+   "events": null,
+   "pty_bytes": 28909,
+   "pty_writes": 12,
+   "rss_kb": 104648,
+   "pss_kb": 61159,
+   "private_dirty_kb": 48340,
+   "vmhwm_kb": 107112,
+   "utime_ticks": 19,
+   "stime_ticks": 2
+  },
+  {
+   "kind": "boundary",
+   "t_ms": 1382,
+   "msgs": 100,
+   "events": 355,
+   "pty_bytes": 31409,
+   "pty_writes": 14,
+   "rss_kb": 111376,
+   "pss_kb": 67773,
+   "private_dirty_kb": 54944,
+   "vmhwm_kb": 111396,
+   "utime_ticks": 22,
+   "stime_ticks": 3
+  },
+  {
+   "kind": "boundary",
+   "t_ms": 1383,
+   "msgs": 200,
+   "events": 738,
+   "pty_bytes": 31409,
+   "pty_writes": 14,
+   "rss_kb": 111648,
+   "pss_kb": 68045,
+   "private_dirty_kb": 55216,
+   "vmhwm_kb": 111768,
+   "utime_ticks": 22,
+   "stime_ticks": 3
+  },
+  {
+   "kind": "boundary",
+   "t_ms": 1383,
+   "msgs": 300,
+   "events": 1051,
+   "pty_bytes": 31409,
+   "pty_writes": 14,
+   "rss_kb": 111880,
+   "pss_kb": 68277,
+   "private_dirty_kb": 55448,
+   "vmhwm_kb": 111748,
+   "utime_ticks": 22,
+   "stime_ticks": 3
+  },
+  {
+   "kind": "done",
+   "t_ms": 1384,
+   "msgs": 300,
+   "events": 1051,
+   "pty_bytes": 31409,
+   "pty_writes": 14,
+   "rss_kb": 111748,
+   "pss_kb": 68145,
+   "private_dirty_kb": 55316,
+   "vmhwm_kb": 111752,
+   "utime_ticks": 22,
+   "stime_ticks": 3
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 2036,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 35558,
+   "pty_writes": 17,
+   "rss_kb": 300388,
+   "pss_kb": 254649,
+   "private_dirty_kb": 240344,
+   "vmhwm_kb": 301568,
+   "utime_ticks": 109,
+   "stime_ticks": 11
+  },
+  {
+   "kind": "final",
+   "t_ms": 2867,
+   "msgs": 300,
+   "events": 1051,
+   "pty_bytes": 35630,
+   "pty_writes": 18,
+   "rss_kb": 300420,
+   "pss_kb": 254681,
+   "private_dirty_kb": 240376,
+   "vmhwm_kb": 301568,
+   "utime_ticks": 109,
+   "stime_ticks": 11
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 3045,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 46541,
+   "pty_writes": 22,
+   "rss_kb": 300480,
+   "pss_kb": 254741,
+   "private_dirty_kb": 240436,
+   "vmhwm_kb": 301568,
+   "utime_ticks": 111,
+   "stime_ticks": 11
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 4050,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 57863,
+   "pty_writes": 27,
+   "rss_kb": 300528,
+   "pss_kb": 254789,
+   "private_dirty_kb": 240484,
+   "vmhwm_kb": 301568,
+   "utime_ticks": 112,
+   "stime_ticks": 11
+  }
+ ],
+ "events": [
+  {
+   "kind": "rpc",
+   "method": "session.create",
+   "t_ms": 175
+  },
+  {
+   "kind": "rpc",
+   "method": "startup.catalog",
+   "t_ms": 175
+  },
+  {
+   "kind": "rpc",
+   "method": "model.options",
+   "t_ms": 175
+  }
+ ],
+ "summary": {
+  "result": "completed",
+  "cap_hit": false,
+  "cap_hit_basis": null,
+  "at_messages": null,
+  "exit": {
+   "exitCode": 0,
+   "signal": 0,
+   "t": 4721
+  },
+  "stream_done": true,
+  "msgs_streamed": 300,
+  "events_streamed": 1051,
+  "pty_bytes_total": 62674,
+  "pty_data_callbacks": 32,
+  "first_byte_ms": 130,
+  "session_create_ms": 175,
+  "stream_start_ms": 1380,
+  "vmhwm_kb": 301568,
+  "cg_peak": null,
+  "drain_max_loop_lag_ms": 3,
+  "drain_lag_violations": 0,
+  "drain_ok": true,
+  "digest": "4c4f97e930ebbaa2f174eaf5410c4d100689c671220623ad906530d885eef948"
+ },
+ "digest_text": "⚕ Hermes Agent · opentui · ready ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── $ terminal Culpa cillum commodo enim. · 3.7s (2 lines) ◇ read_file Duis veniam sed anim. · 3.8s (18 lines) ◦ edit_file Tempor ipsum cupidatat voluptate. · 3.9s (7 lines) ◦ grep Sunt esse aliquip aliqua. · 4.0s (2 lines) ● web_search Consequat minim elit mollit. · 0.1s (18 lines) ◆ write_file Eiusmod lorem occaecat reprehenderit. · 0.2s (7 lines) $ terminal Proident velit laboris magna. · 0.3s (2 lines) Minim elit mollit pariatur aute quis eiusmod lorem occaecat reprehenderit exercitation incididunt dolor. Officia fugiat consequat minim elit mollit pariatur aute quis eiusmod lorem occaecat reprehenderit exercitation. ⧉ copy ⚕ Tempor ipsum cupidatat voluptate ullamco labore sit sunt esse aliquip aliqua. Excepteur irure nostrud tempor ipsum cupidatat voluptate ullamco labore sit sunt esse. Veniam sed anim excepteur irure nostrud tempor ipsum cupidatat voluptate ullamco labore sit. - Sunt esse aliquip aliqua consectetur. - Consequat minim elit mollit pariatur aute quis. - Eiusmod lorem occaecat reprehenderit. const x4 = 58 function f3() { return x } Exercitation incididunt dolor proident velit laboris magna amet culpa cillum. Lorem occaecat reprehenderit exercitation incididunt dolor proident velit laboris magna amet. ⧉ copy ▄ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── ● fake-model │ up: Ns │ …/quiet-quill/hermes-agent ❯ Type your message"
+}

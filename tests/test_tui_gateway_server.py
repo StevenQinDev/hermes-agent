@@ -3804,6 +3804,51 @@ def test_session_info_includes_mcp_servers(monkeypatch):
     assert info["mcp_servers"] == fake_status
 
 
+def test_session_info_includes_session_title(monkeypatch):
+    """session.info carries the live session title (window-title chrome).
+
+    Resolution order mirrors _session_live_title: DB row wins, a queued
+    pending_title fills in before the row exists, "" until either lands.
+    """
+    agent = types.SimpleNamespace(tools=[], model="m", provider="p")
+
+    # No session at all -> "" (and never a crash).
+    assert server._session_info(agent, None)["title"] == ""
+
+    # pending_title before the DB row exists.
+    session = {"session_key": "k1", "pending_title": "rename the moon"}
+    monkeypatch.setattr(server, "_get_db", lambda: None)
+    assert server._session_info(agent, session)["title"] == "rename the moon"
+
+    # DB row wins over pending.
+    fake_db = types.SimpleNamespace(get_session_title=lambda key: "db title")
+    monkeypatch.setattr(server, "_get_db", lambda: fake_db)
+    assert server._session_info(agent, session)["title"] == "db title"
+
+
+def test_emit_title_refresh_pushes_session_info(monkeypatch):
+    """_emit_title_refresh emits a session.info for a live session and is a
+    silent no-op for unknown/agent-less sessions (it runs on the auto-title
+    worker thread -- it must never raise)."""
+    events = []
+    monkeypatch.setattr(
+        server, "_emit", lambda event_type, sid, payload: events.append((event_type, sid, payload))
+    )
+    monkeypatch.setattr(server, "_session_info", lambda agent, session: {"title": "t"})
+
+    agent = types.SimpleNamespace(tools=[], model="m", provider="p")
+    monkeypatch.setitem(server._sessions, "title-test", {"agent": agent, "session_key": "k"})
+
+    server._emit_title_refresh("title-test")
+    assert events == [("session.info", "title-test", {"title": "t"})]
+
+    # Unknown sid / no agent -> no emission, no exception.
+    server._emit_title_refresh("missing-sid")
+    monkeypatch.setitem(server._sessions, "agentless", {"session_key": "k2"})
+    server._emit_title_refresh("agentless")
+    assert len(events) == 1
+
+
 # ---------------------------------------------------------------------------
 # History-mutating commands must reject while session.running is True.
 # Without these guards, prompt.submit's post-run history write either

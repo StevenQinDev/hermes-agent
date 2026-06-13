@@ -1,0 +1,15 @@
+{
+  "comment": "Tree-sitter grammars vendored beyond @opentui/core's bundled 5 (ts/js/markdown/markdown_inline/zig). Source of truth for scripts/update-parsers.mjs (vendoring) and src/boundary/parsers.ts (boot registration). Curated in docs/plans/opentui-syntax-highlighting-languages.md — cpp deliberately dropped (3.28 MB, ~half the bundle). Aliases are belt-and-braces: core's extToFiletype/infoStringToFiletype already normalize py->python etc., but a literal alias filetype reaching the client still resolves.",
+  "parsers": [
+    { "filetype": "python", "aliases": ["py"], "org": "tree-sitter", "tag": "v0.23.6" },
+    { "filetype": "rust", "aliases": ["rs"], "org": "tree-sitter", "tag": "v0.23.2" },
+    { "filetype": "go", "aliases": [], "org": "tree-sitter", "tag": "v0.23.4" },
+    { "filetype": "bash", "aliases": ["sh", "shell", "zsh"], "org": "tree-sitter", "tag": "v0.23.3" },
+    { "filetype": "json", "aliases": [], "org": "tree-sitter", "tag": "v0.24.8" },
+    { "filetype": "c", "aliases": ["h"], "org": "tree-sitter", "tag": "v0.23.5" },
+    { "filetype": "html", "aliases": [], "org": "tree-sitter", "tag": "v0.23.2" },
+    { "filetype": "css", "aliases": [], "org": "tree-sitter", "tag": "v0.23.2" },
+    { "filetype": "yaml", "aliases": ["yml"], "org": "tree-sitter-grammars", "tag": "v0.7.1" },
+    { "filetype": "toml", "aliases": [], "org": "tree-sitter-grammars", "tag": "v0.7.0" }
+  ]
+}

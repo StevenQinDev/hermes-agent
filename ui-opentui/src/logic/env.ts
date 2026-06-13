@@ -76,3 +76,28 @@ export function envComposerRows(value: string | undefined): number {
 export function envOutputUnlimited(value: string | undefined): boolean {
   return envOutputLines(value) === Number.POSITIVE_INFINITY
 }
+
+/**
+ * The session's launch directory for `session.create`'s `cwd` param.
+ *
+ * The hermes launcher runs the OpenTUI engine with its process cwd set to the
+ * engine's own package dir, so `process.cwd()` is NOT where the user ran
+ * hermes. The launcher exports the real launch dir as `HERMES_CWD` (and the
+ * gateway's `TERMINAL_CWD`); prefer those. Falls back to `process.cwd()` only
+ * for standalone launches (smokes/dev) where no launcher set them, and returns
+ * `undefined` when even that is empty so the gateway resolves its own default.
+ */
+export function launchCwd(env: { readonly [k: string]: string | undefined } = process.env): string | undefined {
+  // First NON-BLANK of the launcher's vars (?? would keep a blank HERMES_CWD
+  // and never reach TERMINAL_CWD).
+  for (const value of [env.HERMES_CWD, env.TERMINAL_CWD]) {
+    const trimmed = (value ?? '').trim()
+    if (trimmed) return trimmed
+  }
+  try {
+    const cwd = process.cwd().trim()
+    return cwd || undefined
+  } catch {
+    return undefined
+  }
+}

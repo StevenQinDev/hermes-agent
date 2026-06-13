@@ -1,0 +1,526 @@
+{
+ "meta": {
+  "cell": "gate",
+  "ui": "ink",
+  "config": "ink",
+  "mode": "digest",
+  "rep": 1,
+  "run_id": "mqaf7qlt-11yq",
+  "utc": "2026-06-12T04:22:47.921Z",
+  "sha": "f0ec24ad5",
+  "node": "/home/daimon/.local/share/fnm/node-versions/v26.3.0/installation/bin/node",
+  "node_version": "v26.3.0",
+  "pty": {
+   "cols": 120,
+   "rows": 40,
+   "term": "xterm-256color"
+  },
+  "heap_mb": 8192,
+  "memory_max": null,
+  "container_cap": false,
+  "container_memory": null,
+  "opentui_cap": null,
+  "fixture": {
+   "path": "/home/daimon/github/worktrees/hermes-agent/quiet-quill/hermes-agent/bench/.cache/fixture-300.ndjson",
+   "msgs": 300,
+   "sha256": "ac81e975c299da7d50cfda7fc0fee33c356bd31a4e17a7f0f8e49905e205051a"
+  },
+  "sample_every": 100,
+  "mode_params": {},
+  "ui_pid": 167362,
+  "gw_pid": 167375,
+  "cgroup": null,
+  "load_avg_at_start": [
+   0.4,
+   0.96,
+   1.44
+  ],
+  "instrumented": false
+ },
+ "samples": [
+  {
+   "kind": "periodic",
+   "t_ms": 27,
+   "msgs": null,
+   "events": null,
+   "pty_bytes": 0,
+   "pty_writes": 0,
+   "rss_kb": 57124,
+   "pss_kb": 31720,
+   "private_dirty_kb": 20020,
+   "vmhwm_kb": 57124,
+   "utime_ticks": 1,
+   "stime_ticks": 1
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 1031,
+   "msgs": null,
+   "events": null,
+   "pty_bytes": 6665,
+   "pty_writes": 9,
+   "rss_kb": 110124,
+   "pss_kb": 72684,
+   "private_dirty_kb": 51672,
+   "vmhwm_kb": 110124,
+   "utime_ticks": 26,
+   "stime_ticks": 4
+  },
+  {
+   "kind": "boundary",
+   "t_ms": 1481,
+   "msgs": 100,
+   "events": 355,
+   "pty_bytes": 10675,
+   "pty_writes": 12,
+   "rss_kb": 128172,
+   "pss_kb": 90565,
+   "private_dirty_kb": 68808,
+   "vmhwm_kb": 128256,
+   "utime_ticks": 34,
+   "stime_ticks": 5
+  },
+  {
+   "kind": "boundary",
+   "t_ms": 1557,
+   "msgs": 200,
+   "events": 738,
+   "pty_bytes": 18489,
+   "pty_writes": 14,
+   "rss_kb": 166540,
+   "pss_kb": 128783,
+   "private_dirty_kb": 106984,
+   "vmhwm_kb": 166772,
+   "utime_ticks": 44,
+   "stime_ticks": 6
+  },
+  {
+   "kind": "boundary",
+   "t_ms": 1582,
+   "msgs": 300,
+   "events": 1051,
+   "pty_bytes": 22560,
+   "pty_writes": 15,
+   "rss_kb": 182916,
+   "pss_kb": 145159,
+   "private_dirty_kb": 123360,
+   "vmhwm_kb": 182992,
+   "utime_ticks": 50,
+   "stime_ticks": 6
+  },
+  {
+   "kind": "done",
+   "t_ms": 1583,
+   "msgs": 300,
+   "events": 1051,
+   "pty_bytes": 22560,
+   "pty_writes": 15,
+   "rss_kb": 183032,
+   "pss_kb": 145275,
+   "private_dirty_kb": 123476,
+   "vmhwm_kb": 183036,
+   "utime_ticks": 51,
+   "stime_ticks": 6
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 2035,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34064,
+   "pty_writes": 19,
+   "rss_kb": 187616,
+   "pss_kb": 149816,
+   "private_dirty_kb": 127996,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 64,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 3044,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34154,
+   "pty_writes": 21,
+   "rss_kb": 187632,
+   "pss_kb": 149832,
+   "private_dirty_kb": 128012,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 65,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 4047,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34244,
+   "pty_writes": 23,
+   "rss_kb": 187636,
+   "pss_kb": 149878,
+   "private_dirty_kb": 128016,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 65,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 5054,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34334,
+   "pty_writes": 25,
+   "rss_kb": 187644,
+   "pss_kb": 150010,
+   "private_dirty_kb": 128024,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 65,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 6059,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34424,
+   "pty_writes": 27,
+   "rss_kb": 187652,
+   "pss_kb": 150018,
+   "private_dirty_kb": 128032,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 65,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 7064,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34514,
+   "pty_writes": 29,
+   "rss_kb": 187652,
+   "pss_kb": 150018,
+   "private_dirty_kb": 128032,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 65,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 8068,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34604,
+   "pty_writes": 31,
+   "rss_kb": 187656,
+   "pss_kb": 150022,
+   "private_dirty_kb": 128036,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 66,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 9073,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34694,
+   "pty_writes": 33,
+   "rss_kb": 187656,
+   "pss_kb": 150022,
+   "private_dirty_kb": 128036,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 66,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 10087,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34784,
+   "pty_writes": 35,
+   "rss_kb": 187656,
+   "pss_kb": 150022,
+   "private_dirty_kb": 128036,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 66,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 11096,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 34904,
+   "pty_writes": 37,
+   "rss_kb": 187664,
+   "pss_kb": 148140,
+   "private_dirty_kb": 128044,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 66,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 12098,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 35013,
+   "pty_writes": 39,
+   "rss_kb": 187664,
+   "pss_kb": 145076,
+   "private_dirty_kb": 128044,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 66,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 13098,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 35103,
+   "pty_writes": 41,
+   "rss_kb": 187664,
+   "pss_kb": 145045,
+   "private_dirty_kb": 128044,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 66,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 14102,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 35193,
+   "pty_writes": 43,
+   "rss_kb": 187664,
+   "pss_kb": 145044,
+   "private_dirty_kb": 128044,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 67,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 15111,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 35283,
+   "pty_writes": 45,
+   "rss_kb": 187664,
+   "pss_kb": 145044,
+   "private_dirty_kb": 128044,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 67,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 16118,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 35373,
+   "pty_writes": 47,
+   "rss_kb": 187680,
+   "pss_kb": 145060,
+   "private_dirty_kb": 128060,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 67,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "final",
+   "t_ms": 16674,
+   "msgs": 300,
+   "events": 1051,
+   "pty_bytes": 35463,
+   "pty_writes": 49,
+   "rss_kb": 187680,
+   "pss_kb": 145060,
+   "private_dirty_kb": 128060,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 67,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 17125,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 46138,
+   "pty_writes": 56,
+   "rss_kb": 175904,
+   "pss_kb": 133284,
+   "private_dirty_kb": 116284,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 71,
+   "stime_ticks": 7
+  },
+  {
+   "kind": "periodic",
+   "t_ms": 18129,
+   "msgs": 300,
+   "events": null,
+   "pty_bytes": 49784,
+   "pty_writes": 59,
+   "rss_kb": 177964,
+   "pss_kb": 135344,
+   "private_dirty_kb": 118344,
+   "vmhwm_kb": 196580,
+   "utime_ticks": 72,
+   "stime_ticks": 7
+  }
+ ],
+ "events": [
+  {
+   "kind": "rpc",
+   "method": "config.get",
+   "t_ms": 226
+  },
+  {
+   "kind": "rpc",
+   "method": "commands.catalog",
+   "t_ms": 226
+  },
+  {
+   "kind": "rpc",
+   "method": "setup.status",
+   "t_ms": 251
+  },
+  {
+   "kind": "rpc",
+   "method": "session.create",
+   "t_ms": 251
+  },
+  {
+   "kind": "rpc",
+   "method": "config.get",
+   "t_ms": 251
+  },
+  {
+   "kind": "rpc",
+   "method": "config.get",
+   "t_ms": 251
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 251
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 1756
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 3243
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 4751
+  },
+  {
+   "kind": "rpc",
+   "method": "config.get",
+   "t_ms": 5253
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 6258
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 7766
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 9248
+  },
+  {
+   "kind": "rpc",
+   "method": "config.get",
+   "t_ms": 10263
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 10767
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 12272
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 13749
+  },
+  {
+   "kind": "rpc",
+   "method": "config.get",
+   "t_ms": 15261
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 15261
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 16771
+  },
+  {
+   "kind": "rpc",
+   "method": "terminal.resize",
+   "t_ms": 16796
+  },
+  {
+   "kind": "rpc",
+   "method": "terminal.resize",
+   "t_ms": 17197
+  },
+  {
+   "kind": "rpc",
+   "method": "session.active_list",
+   "t_ms": 18255
+  }
+ ],
+ "summary": {
+  "result": "completed",
+  "cap_hit": false,
+  "cap_hit_basis": null,
+  "at_messages": null,
+  "exit": {
+   "exitCode": 0,
+   "signal": 0,
+   "t": 18284
+  },
+  "stream_done": true,
+  "msgs_streamed": 300,
+  "events_streamed": 1051,
+  "pty_bytes_total": 50236,
+  "pty_data_callbacks": 64,
+  "first_byte_ms": 110,
+  "session_create_ms": 251,
+  "stream_start_ms": 1455,
+  "vmhwm_kb": 196580,
+  "cg_peak": null,
+  "drain_max_loop_lag_ms": 3,
+  "drain_lag_violations": 0,
+  "drain_ok": true,
+  "digest": "0f62155086e89590f62e059cc7bcf0851b6c88dac942a8f2303ac905481dea48"
+ },
+ "digest_text": "Excepteur irure nostrud tempor ipsum cupidatat voluptate ullamco labore sit.│Amet culpa cillum commodo enim adipiscing deserunt nulla duis veniam sed.│Quis eiusmod lorem occaecat reprehenderit exercitation incididunt dolor proident velit laboris magna.│Esse aliquip aliqua consectetur officia fugiat consequat minim elit mollit pariatur aute quis.│Anim excepteur irure nostrud tempor ipsum cupidatat voluptate ullamco labore sit sunt esse aliquip.│Magna amet culpa cillum.│Aute quis eiusmod lorem occaecat.│ └─ ● Terminal(\"Proident velit laboris magna.\") (0.3s)│ └─ Args:│Proident velit laboris magna amet culpa cillum commodo enim adipiscing deserunt nulla.│Elit mollit pariatur aute quis eiusmod lorem occaecat reprehenderit exercitation incididunt dolor proident.│Ullamco labore sit sunt esse aliquip aliqua consectetur officia fugiat consequat minim elit mollit.│Nulla duis veniam sed.│Dolor proident velit laboris magna.│Result:│Pariatur aute quis eiusmod lorem occaecat reprehenderit exercitation incididunt dolor proident velit laboris.│Sit sunt esse aliquip aliqua consectetur officia fugiat consequat minim elit mollit pariatur aute.││┊ Minimelitmollitpariaturautequiseiusmodloremoccaecatreprehenderitexercitationincididuntdolor.Officia│fugiatconsequatminimelitmollitpariaturautequiseiusmodloremoccaecatreprehenderitexercitation.│┊ Temporipsumcupidatatvoluptateullamcolaboresitsuntessealiquipaliqua.Excepteurirurenostrudtempor│ipsumcupidatatvoluptateullamcolaboresitsuntesse.Veniamsedanimexcepteurirurenostrudtempor│ipsumcupidatatvoluptateullamcolaboresit.││• Suntessealiquipaliquaconsectetur.│• Consequatminimelitmollitpariaturautequis.│• Eiusmodloremoccaecatreprehenderit.││─ ts│constx4=58│functionf3(){│returnx│}││Exercitationincididuntdolorproidentvelitlaborismagnaametculpacillum.Loremoccaecatreprehenderit┃exercitationincididuntdolorproidentvelitlaborismagnaamet.─ ready │ fake model │ 16s │ ✓ 15s │ voice off ─ …es-agent (…i-native-engine)❯│┃Excepteur irure nostrud tempor ipsum cupidatat voluptate ullamco labore sit.│Amet culpa cillum commodo enim adipiscing deserunt nulla duis veniam sed.│Quis eiusmod lorem occaecat reprehenderit exercitation incididunt dolor proident velit laboris magna.│Esse aliquip aliqua consectetur officia fugiat consequat minim elit mollit pariatur aute quis.│Anim excepteur irure nostrud tempor ipsum cupidatat voluptate ullamco labore sit sunt esse aliquip.│Magna amet culpa cillum.│Aute quis eiusmod lorem occaecat.│ └─ ● Terminal(\"Proident velit laboris magna.\") (0.3s)│ └─ Args:│Proident velit laboris magna amet culpa cillum commodo enim adipiscing deserunt nulla.│Elit mollit pariatur aute quis eiusmod lorem occaecat reprehenderit exercitation incididunt dolor proident.│Ullamco labore sit sunt esse aliquip aliqua consectetur officia fugiat consequat minim elit mollit.│Nulla duis veniam sed.│Dolor proident velit laboris magna.│Result:│Pariatur aute quis eiusmod lorem occaecat reprehenderit exercitation incididunt dolor proident velit laboris.│Sit sunt esse aliquip aliqua consectetur officia fugiat consequat minim elit mollit pariatur aute.││┊ Minimelitmollitpariaturautequiseiusmodloremoccaecatreprehenderitexercitationincididuntdolor.Officia│fugiatconsequatminimelitmollitpariaturautequiseiusmodloremoccaecatreprehenderitexercitation.│┊ Temporipsumcupidatatvoluptateullamcolaboresitsuntessealiquipaliqua.Excepteurirurenostrudtempor│ipsumcupidatatvoluptateullamcolaboresitsuntesse.Veniamsedanimexcepteurirurenostrudtempor│ipsumcupidatatvoluptateullamcolaboresit.││• Suntessealiquipaliquaconsectetur.│• Consequatminimelitmollitpariaturautequis.│• Eiusmodloremoccaecatreprehenderit.││─ ts│constx4=58│functionf3(){│returnx│}││Exercitationincididuntdolorproidentvelitlaborismagnaametculpacillum.Loremoccaecatreprehenderit│exercitationincididuntdolorproidentvelitlaborismagnaamet.┃─ ready │ fake model │ 16s │ ✓ 15s │ voice off ─ …es-agent (…i-native-engine)❯768"
+}

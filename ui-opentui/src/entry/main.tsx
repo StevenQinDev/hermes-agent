@@ -30,10 +30,11 @@ import { GatewayService, type GatewayServiceShape } from '../boundary/gateway/Ga
 import { liveGatewayLayer } from '../boundary/gateway/liveGateway.ts'
 import { getLog } from '../boundary/log.ts'
 import { startMemlog } from '../boundary/memlog.ts'
+import { registerVendoredParsers } from '../boundary/parsers.ts'
 import { acquireRenderer } from '../boundary/renderer.ts'
 import { makeAppLayer } from '../boundary/runtime.ts'
 import { nthAssistantResponse } from '../logic/copy.ts'
-import { envFlag } from '../logic/env.ts'
+import { envFlag, launchCwd } from '../logic/env.ts'
 import { createPromptHistory, dirHistoryPersister, loadDirHistory } from '../logic/history.ts'
 import { createPasteStore } from '../logic/pastes.ts'
 import { mapResumeHistory } from '../logic/resume.ts'
@@ -48,6 +49,12 @@ import {
 } from '../logic/slash.ts'
 import { createSessionStore, type SessionStore } from '../logic/store.ts'
 import { App } from '../view/App.tsx'
+import { TerminalChrome } from '../view/terminalChrome.tsx'
+
+// Syntax-highlighting language expansion: register the vendored tree-sitter
+// grammars (python/rust/go/bash/json/c/html/css/yaml/toml) before the first
+// <code>/<markdown> mount initializes the global tree-sitter client.
+registerVendoredParsers()
 import type { SessionPickerOps } from '../view/overlays/sessionPicker.tsx'
 import { ThemeProvider } from '../view/theme.tsx'
 import { makeFakeGatewayLayer, type FakeGatewayController } from './fakeGateway.ts'
@@ -174,7 +181,18 @@ const postSessionSetup = (gateway: GatewayServiceShape, store: SessionStore, sid
 const createFreshSession = (gateway: GatewayServiceShape, store: SessionStore, input: TuiInput) =>
   Effect.gen(function* () {
     const created = yield* gateway.request<{ session_id?: string; info?: Record<string, unknown> }>('session.create', {
-      cols: input.cols
+      cols: input.cols,
+      // The launch directory IS the workspace choice in a terminal (you cd'd
+      // here) — passing it makes the gateway treat it as explicit, so the
+      // session row gets a persisted cwd on first message, the chrome bar shows
+      // the right dir, and /sessions groups this directory's sessions first.
+      // NOT process.cwd(): the hermes launcher runs this engine with cwd set to
+      // its own package dir (ui-opentui), so process.cwd() would be the engine
+      // dir. The launcher exports the REAL launch dir as HERMES_CWD / the
+      // gateway's TERMINAL_CWD; prefer those, falling back to process.cwd()
+      // only when launched standalone (smokes/dev). (Desktop omits cwd — its
+      // launch dir is meaningless; see _ensure_session_db_row.)
+      cwd: launchCwd()
     })
     const sid = created?.session_id ?? gateway.sessionId()
     if (!sid) {
@@ -542,6 +560,7 @@ export const run = Effect.fn('Tui.run')(function* (input: TuiInput) {
           () => (
             <KeymapProvider keymap={keymap}>
               <ThemeProvider theme={() => store.state.theme}>
+                <TerminalChrome store={store} />
                 <App
                   store={store}
                   onSubmit={submit}

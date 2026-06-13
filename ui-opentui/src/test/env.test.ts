@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { envFlag, envOutputLines, envOutputUnlimited } from '../logic/env.ts'
+import { envFlag, envOutputLines, envOutputUnlimited, launchCwd } from '../logic/env.ts'
 
 describe('envFlag', () => {
   test('recognizes truthy values regardless of case/whitespace', () => {
@@ -64,5 +64,20 @@ describe('envOutputLines (HERMES_TUI_TOOL_OUTPUT_LINES)', () => {
     expect(envOutputUnlimited('garbage')).toBe(true)
     expect(envOutputUnlimited('50')).toBe(false)
     expect(envOutputUnlimited('200')).toBe(false)
+  })
+})
+
+describe('launchCwd (session.create cwd)', () => {
+  test('prefers HERMES_CWD (real launch dir the hermes launcher exports)', () => {
+    expect(launchCwd({ HERMES_CWD: '/home/u/proj', TERMINAL_CWD: '/other' })).toBe('/home/u/proj')
+  })
+
+  test('falls back to TERMINAL_CWD when HERMES_CWD is unset/blank', () => {
+    expect(launchCwd({ TERMINAL_CWD: '/home/u/wt' })).toBe('/home/u/wt')
+    expect(launchCwd({ HERMES_CWD: '  ', TERMINAL_CWD: '/home/u/wt' })).toBe('/home/u/wt')
+  })
+
+  test('falls back to process.cwd() (non-empty) when no launcher env set', () => {
+    expect(launchCwd({})).toBe(process.cwd())
   })
 })

@@ -2373,6 +2373,17 @@ def _session_info(agent, session: dict | None = None) -> dict:
         yolo = bool(_YOLO_MODE_FROZEN) or session_yolo or _get_approval_mode() == "off"
     except Exception:
         yolo = False
+    # Session title (DB row, falling back to a not-yet-applied pending_title).
+    # Drives client window-title chrome (OSC 0/2 in the native TUI); "" until
+    # the first exchange titles the session.
+    title = ""
+    if session is not None:
+        try:
+            title = _session_live_title(
+                session, str(session.get("session_key") or "")
+            )
+        except Exception:
+            title = ""
     info: dict = {
         "model": getattr(agent, "model", ""),
         "provider": getattr(agent, "provider", ""),
@@ -2385,6 +2396,7 @@ def _session_info(agent, session: dict | None = None) -> dict:
         "cwd": cwd,
         "branch": _git_branch_for_cwd(cwd),
         "personality": str(personality or ""),
+        "title": title,
         "running": bool((session or {}).get("running")),
         "desktop_contract": DESKTOP_BACKEND_CONTRACT,
         "version": "",
@@ -4399,6 +4411,22 @@ def _session_live_title(session: dict, key: str) -> str:
     return title
 
 
+def _emit_title_refresh(sid: str) -> None:
+    """Push a session.info refresh after a title change (pending-title
+    application, auto-title landing, or a session.title rename) so clients'
+    window-title chrome updates immediately. Thread-safe (auto-title calls
+    this from its worker thread; _emit serializes on the stdout lock).
+    Never raises."""
+    try:
+        session = _sessions.get(sid)
+        agent = (session or {}).get("agent")
+        if session is None or agent is None:
+            return
+        _emit("session.info", sid, _session_info(agent, session))
+    except Exception:
+        pass
+
+
 def _session_live_item(sid: str, session: dict, current_sid: str = "") -> dict:
     key = str(session.get("session_key") or sid)
     agent = session.get("agent")
@@ -4624,15 +4652,18 @@ def _(rid, params: dict) -> dict:
     title = (params.get("title", "") or "").strip()
     if not title:
         return _err(rid, 4021, "title required")
+    sid = str(params.get("session_id") or "")
     try:
         if db.set_session_title(key, title):
             session["pending_title"] = None
+            _emit_title_refresh(sid)
             return _ok(rid, {"pending": False, "title": title})
         # rowcount == 0 can mean "same value" as well as "missing row".
         # Queue only when the session row truly does not exist yet.
         existing_row = db.get_session(key)
         if existing_row:
             session["pending_title"] = None
+            _emit_title_refresh(sid)
             return _ok(
                 rid,
                 {
@@ -4641,6 +4672,7 @@ def _(rid, params: dict) -> dict:
                 },
             )
         session["pending_title"] = title
+        _emit_title_refresh(sid)
         return _ok(rid, {"pending": True, "title": title})
     except ValueError as e:
         return _err(rid, 4022, str(e))
@@ -5997,9 +6029,19 @@ def _run_prompt_submit(rid, sid: str, session: dict, text: Any) -> None:
                         text,
                         raw,
                         session.get("history", []),
+                        # Auto-title lands on a background thread — refresh
+                        # session.info when it does so clients' window-title
+                        # chrome (OSC 0/2) updates without waiting for the
+                        # next turn. _emit is stdout-lock-guarded (thread-safe).
+                        title_callback=lambda _title: _emit_title_refresh(sid),
                     )
                 except Exception:
                     pass
+
+            # The pending title (applied synchronously above) is visible NOW —
+            # refresh session.info so window-title chrome picks it up.
+            if status == "complete" and _pending:
+                _emit_title_refresh(sid)
 
             # CLI parity: when voice-mode TTS is on, speak the agent reply
             # (cli.py:_voice_speak_response).  Only the final text — tool

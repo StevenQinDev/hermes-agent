@@ -16,10 +16,14 @@ import { createCliRenderer } from '@opentui/core'
 import { render } from '@opentui/solid'
 
 import { installMultiClickSelection } from '../src/boundary/multiClickSelect.ts'
+import { registerVendoredParsers } from '../src/boundary/parsers.ts'
 import { createSessionStore } from '../src/logic/store.ts'
 import { App } from '../src/view/App.tsx'
 import { ThemeProvider } from '../src/view/theme.tsx'
 import { materialize } from './fixture.ts'
+
+// Same grammar registration as the live entry so fixture code blocks highlight.
+registerVendoredParsers()
 
 const TOTAL = Number.parseInt(process.env.DEMO_TOTAL ?? '', 10) || 200
 

@@ -52,6 +52,9 @@ export const SessionInfoPatchSchema = Schema.Struct({
   fast: opt(Bool),
   cwd: opt(Str),
   branch: opt(Str),
+  // session title ("" until the first exchange titles it) — drives the
+  // terminal window-title chrome (OSC 0/2 via renderer.setTerminalTitle).
+  title: opt(Str),
   running: opt(Bool),
   // status-bar chrome extras (Epic 1.3): update banner, profile badge, MCP count.
   // `update_behind` is null on the wire until the async update check resolves.
