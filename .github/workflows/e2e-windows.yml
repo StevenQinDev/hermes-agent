@@ -166,9 +166,10 @@ jobs:
           Copy-Item -Path 'Hermes-Setup.exe' -Destination "$downloads\Hermes-Setup.exe" -Force
           Write-Host "Staged installer: $downloads\Hermes-Setup.exe"
 
-      - uses: actions/checkout@v4
+      - name: Checkout src code to hermes home
+        uses: actions/checkout@v4
         with:
-          repositoryPath: "{{ github.workspace }}\.e2e-hermes-home\hermes-agent"
+          path: {{ github.workspace }}\.e2e-hermes-home\hermes-agent
 
       # ── Screen recording for coordinate discovery ───────────────────
       - name: Start screen recording
