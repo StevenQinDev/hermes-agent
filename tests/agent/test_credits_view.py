@@ -193,15 +193,18 @@ def test_gateway_topup_fetch_exception_is_not_logged_in(monkeypatch):
 # ── command registry ────────────────────────────────────────────────────────
 
 
-def test_credits_folds_into_topup():
-    """`/credits` is an alias of `/topup` now — it resolves to the topup command."""
+def test_credits_command_fully_removed():
+    """`/credits` is gone entirely — not a command, not an alias. Billing lives on
+    /topup, which is the surface on every platform."""
     from hermes_cli.commands import resolve_command, COMMAND_REGISTRY
 
-    cmd = resolve_command("credits")
-    assert cmd is not None and cmd.name == "topup"
-    # /topup is available on every surface (not cli_only / gateway_only).
+    # /credits resolves to nothing (no command, no alias).
+    assert resolve_command("credits") is None
+    # No standalone `credits` command remains in the registry.
+    assert not any(c.name == "credits" for c in COMMAND_REGISTRY)
+    # And no command carries `credits` as an alias.
+    assert not any("credits" in (c.aliases or ()) for c in COMMAND_REGISTRY)
+    # /topup is the billing surface, available on every surface (not cli/gateway-only).
     entry = next(c for c in COMMAND_REGISTRY if c.name == "topup")
     assert entry.cli_only is False
     assert entry.gateway_only is False
-    # No standalone `credits` command remains in the registry.
-    assert not any(c.name == "credits" for c in COMMAND_REGISTRY)
