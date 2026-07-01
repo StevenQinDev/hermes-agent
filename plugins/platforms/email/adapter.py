@@ -272,13 +272,59 @@ _AUTH_METHOD_RE = re.compile(
     r"\b(dmarc|dkim|spf)\s*=\s*([a-z]+)", re.IGNORECASE
 )
 # Match a property value like ``header.from=example.com`` or
-# ``smtp.mailfrom=user@example.com``. Some providers stamp non-standard
-# aliases (notably NetEase/163: ``smtp.mail`` and DKIM ``header.i``), so accept
-# those but still require domain alignment before trusting the sender.
+# ``smtp.mailfrom=user@example.com``.
+#
+# RFC 8601 defines ptypes/properties such as ``smtp.mailfrom``, ``header.d``,
+# and ``header.i``. In the wild, providers also stamp aliases or legacy names:
+# NetEase/163 uses ``smtp.mail``; some MTAs use ``mailfrom``, ``client-ip``, or
+# ``envelope-from``. We parse a broad but explicit set of sender-domain fields,
+# then still require SPF/DKIM domain alignment before trusting the visible From.
 _AUTH_PROP_RE = re.compile(
-    r"\b(header\.from|header\.d|header\.i|smtp\.mailfrom|smtp\.from|smtp\.mail|envelope-from)\s*=\s*([^\s;]+)",
+    r"\b("
+    r"header\.(?:from|d|i|sender)"
+    r"|smtp\.(?:mailfrom|mail|from|auth|helo|ehlo)"
+    r"|body\.hash"
+    r"|policy\.(?:from|domain)"
+    r"|mailfrom|envelope-from|return-path"
+    r")\s*=\s*([^\s;]+)",
     re.IGNORECASE,
 )
+
+
+def _clean_auth_property_value(value: str) -> str:
+    """Normalize an Authentication-Results property value.
+
+    Real providers may quote values, wrap them in angle brackets, append
+    comments, or use DKIM identities like ``@example.com``.  Return a compact
+    token suitable for extracting a domain while keeping fail-closed behavior
+    for malformed values.
+    """
+    value = (value or "").strip().strip('"').strip("'").strip()
+    value = value.strip("<>").rstrip(".,")
+    if value.startswith("@"):
+        value = value[1:]
+    return value.lower()
+
+
+def _domain_from_auth_value(value: str) -> str:
+    """Extract a comparable domain from an auth-result property value."""
+    value = _clean_auth_property_value(value)
+    if not value:
+        return ""
+    if "://" in value:
+        return ""
+    if "@" in value:
+        return _domain_of(value)
+    return value.strip().lower().rstrip(".")
+
+
+def _first_aligned_domain(values: List[str], from_domain: str) -> str:
+    """Return the first property domain aligned with From, or ''."""
+    for value in values:
+        domain = _domain_from_auth_value(value)
+        if _domains_aligned(domain, from_domain):
+            return domain
+    return ""
 
 
 def _verify_sender_authentication(
@@ -334,32 +380,42 @@ def _verify_sender_authentication(
         return False, "no Authentication-Results from trusted authserv-id"
 
     methods = {m.lower(): r.lower() for m, r in _AUTH_METHOD_RE.findall(trusted)}
-    props = {p.lower(): v.strip().strip('"') for p, v in _AUTH_PROP_RE.findall(trusted)}
+    props: Dict[str, List[str]] = {}
+    for prop, value in _AUTH_PROP_RE.findall(trusted):
+        props.setdefault(prop.lower(), []).append(value)
 
     # 1) DMARC pass is the strongest signal — DMARC already enforces From
     #    alignment, so a pass means the From domain is authenticated.
     if methods.get("dmarc") == "pass":
         return True, "dmarc=pass"
 
-    # 2) SPF pass aligned with the From domain (the envelope/MAIL FROM domain
-    #    must match the From domain).
+    # 2) SPF pass aligned with the From domain. Prefer MAIL FROM / envelope
+    #    identity, but accept common provider aliases when aligned.
     if methods.get("spf") == "pass":
-        spf_domain = _domain_of(props.get("smtp.mailfrom", "")) or props.get(
-            "smtp.from", ""
-        ) or _domain_of(props.get("smtp.mail", "")) or props.get("envelope-from", "")
-        spf_domain = _domain_of(spf_domain) if "@" in spf_domain else spf_domain
-        if _domains_aligned(spf_domain, from_domain):
+        spf_domain = _first_aligned_domain(
+            props.get("smtp.mailfrom", [])
+            + props.get("smtp.mail", [])
+            + props.get("mailfrom", [])
+            + props.get("envelope-from", [])
+            + props.get("return-path", [])
+            + props.get("smtp.from", [])
+            + props.get("header.from", []),
+            from_domain,
+        )
+        if spf_domain:
             return True, "spf=pass aligned"
 
-    # 3) DKIM pass aligned with the From domain (the signing domain header.d
-    #    must align with the From domain).
+    # 3) DKIM pass aligned with the From domain (the signing domain header.d,
+    #    or identity header.i when header.d is not exposed, must align).
     if methods.get("dkim") == "pass":
-        dkim_domain = (
-            props.get("header.d", "")
-            or _domain_of(props.get("header.i", ""))
-            or _domain_of(props.get("header.from", ""))
+        dkim_domain = _first_aligned_domain(
+            props.get("header.d", [])
+            + props.get("header.i", [])
+            + props.get("header.from", [])
+            + props.get("policy.domain", []),
+            from_domain,
         )
-        if _domains_aligned(dkim_domain, from_domain):
+        if dkim_domain:
             return True, "dkim=pass aligned"
 
     return False, f"authentication failed ({trusted[:120]})"

@@ -1774,6 +1774,77 @@ class TestSenderAuthentication(unittest.TestCase):
         )
         self.assertFalse(ok, reason)
 
+    def test_generic_auth_results_accepts_common_provider_aliases(self):
+        cases = [
+            (
+                "return-path envelope alias",
+                "user@example.com",
+                "mx.example.net; spf=pass return-path=<bounce@example.com>",
+            ),
+            (
+                "bare mailfrom alias",
+                "user@example.com",
+                "mx.example.net; spf=pass mailfrom=user@example.com",
+            ),
+            (
+                "dkim identity with leading at",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=@example.com",
+            ),
+            (
+                "dkim identity with local-part",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=selector@example.com",
+            ),
+            (
+                "subdomain relaxed alignment",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.d=mail.example.com",
+            ),
+        ]
+        for label, from_addr, auth_results in cases:
+            with self.subTest(label=label):
+                ok, reason = self._verify(from_addr, [auth_results])
+                self.assertTrue(ok, reason)
+
+    def test_generic_auth_results_rejects_common_provider_alias_misalignment(self):
+        cases = [
+            (
+                "return-path envelope alias",
+                "user@example.com",
+                "mx.example.net; spf=pass return-path=<bounce@evil.com>",
+            ),
+            (
+                "bare mailfrom alias",
+                "user@example.com",
+                "mx.example.net; spf=pass mailfrom=user@evil.com",
+            ),
+            (
+                "dkim identity with leading at",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=@evil.com",
+            ),
+            (
+                "dkim identity with local-part",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=selector@evil.com",
+            ),
+        ]
+        for label, from_addr, auth_results in cases:
+            with self.subTest(label=label):
+                ok, reason = self._verify(from_addr, [auth_results])
+                self.assertFalse(ok, reason)
+
+    def test_generic_auth_results_uses_later_aligned_value_when_duplicate_property(self):
+        ok, reason = self._verify(
+            "user@example.com",
+            [
+                "mx.example.net; spf=pass smtp.mailfrom=bounce@evil.com; "
+                "smtp.mailfrom=bounce@example.com"
+            ],
+        )
+        self.assertTrue(ok, reason)
+
     def test_injected_header_below_trusted_does_not_authenticate(self):
         """An attacker-injected Authentication-Results sorts BELOW the receiving
         server's. With authserv-id pinning, only the trusted (first) header is
