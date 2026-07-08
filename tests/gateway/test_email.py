@@ -1749,6 +1749,102 @@ class TestSenderAuthentication(unittest.TestCase):
         )
         self.assertTrue(ok, reason)
 
+    def test_netease_auth_results_aliases_authenticate(self):
+        """NetEase/163 stamps SPF/DKIM properties as smtp.mail/header.i.
+
+        Keep strict sender auth enabled while accepting these provider-specific
+        aliases only when they still align with the visible From: domain.
+        """
+        ok, reason = self._verify(
+            "Qin Steven <stevenqin09@outlook.com>",
+            [
+                "gzga-mx-mtada-g4-7; spf=pass smtp.mail=stevenqin09@outlook.com; "
+                "dkim=pass header.i=@outlook.com"
+            ],
+        )
+        self.assertTrue(ok, reason)
+
+    def test_netease_auth_results_aliases_reject_misaligned_domain(self):
+        ok, reason = self._verify(
+            "admin@example.com",
+            [
+                "gzga-mx-mtada-g4-7; spf=pass smtp.mail=attacker@evil.com; "
+                "dkim=pass header.i=@evil.com"
+            ],
+        )
+        self.assertFalse(ok, reason)
+
+    def test_generic_auth_results_accepts_common_provider_aliases(self):
+        cases = [
+            (
+                "return-path envelope alias",
+                "user@example.com",
+                "mx.example.net; spf=pass return-path=<bounce@example.com>",
+            ),
+            (
+                "bare mailfrom alias",
+                "user@example.com",
+                "mx.example.net; spf=pass mailfrom=user@example.com",
+            ),
+            (
+                "dkim identity with leading at",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=@example.com",
+            ),
+            (
+                "dkim identity with local-part",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=selector@example.com",
+            ),
+            (
+                "subdomain relaxed alignment",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.d=mail.example.com",
+            ),
+        ]
+        for label, from_addr, auth_results in cases:
+            with self.subTest(label=label):
+                ok, reason = self._verify(from_addr, [auth_results])
+                self.assertTrue(ok, reason)
+
+    def test_generic_auth_results_rejects_common_provider_alias_misalignment(self):
+        cases = [
+            (
+                "return-path envelope alias",
+                "user@example.com",
+                "mx.example.net; spf=pass return-path=<bounce@evil.com>",
+            ),
+            (
+                "bare mailfrom alias",
+                "user@example.com",
+                "mx.example.net; spf=pass mailfrom=user@evil.com",
+            ),
+            (
+                "dkim identity with leading at",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=@evil.com",
+            ),
+            (
+                "dkim identity with local-part",
+                "user@example.com",
+                "mx.example.net; dkim=pass header.i=selector@evil.com",
+            ),
+        ]
+        for label, from_addr, auth_results in cases:
+            with self.subTest(label=label):
+                ok, reason = self._verify(from_addr, [auth_results])
+                self.assertFalse(ok, reason)
+
+    def test_generic_auth_results_uses_later_aligned_value_when_duplicate_property(self):
+        ok, reason = self._verify(
+            "user@example.com",
+            [
+                "mx.example.net; spf=pass smtp.mailfrom=bounce@evil.com; "
+                "smtp.mailfrom=bounce@example.com"
+            ],
+        )
+        self.assertTrue(ok, reason)
+
     def test_injected_header_below_trusted_does_not_authenticate(self):
         """An attacker-injected Authentication-Results sorts BELOW the receiving
         server's. With authserv-id pinning, only the trusted (first) header is
